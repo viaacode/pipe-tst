@@ -43,7 +43,7 @@ pipeline {
                                 
         }
                    environment {  
-                              VERSION = ""+sha1
+                              VERSION = "$sha1"
                                  }
         }
         
