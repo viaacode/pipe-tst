@@ -31,21 +31,21 @@ pipeline {
             
                    steps { 
                               script {
-                       
-                                    sh('git show-ref --tags > tags')       
-                                    def tags = readFile('tags').trim()
-                                    def userInput = input([ message: 'Please select git tag', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'Tag']]])
 
-                                    echo ("selected tag: "+userInput)
-                                   def sha1 = userInput.split(' ')[0]
-                                        
-                                    echo ("selected sha1: "+ sha1)
-                                    
+                                sh('git show-ref --tags > tags')       
+                                def tags = readFile('tags').trim()
+                                def userInput = input([ message: 'Please select git tag', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'Tag']]])
+                                echo ("selected tag: "+userInput)
+                                def sha1 = userInput.split(' ')[0]
+                                echo ("selected sha1: "+ sha1)
+                                
                               }    
-                                       environment {  
-                                                  VERSION = sha1
-            }
+                                environment {  
+                                            VERSION = sha1
+                                            }
         }
+        }
+        
         stage('Approve') {
             steps {
                 input message: "Do you want to approve the deploy in production?", id: "approval"
