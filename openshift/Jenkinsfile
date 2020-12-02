@@ -45,7 +45,7 @@ pipeline {
                             
                                sh('''/bin/bash
                                set -e
-                               login_oc.sh $ENDPOINT oc project sc-avo2
+                               login_oc.sh $ENDPOINT > /dev/null 2>&1
                                oc project sc-avo2
                               
                                ''')
