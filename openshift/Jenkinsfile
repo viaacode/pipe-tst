@@ -55,7 +55,7 @@ pipeline {
                                 try {
                                            sh("oc -n sc-avo2 get is ${OCP_IS} -o yaml > shas ")
                                                def shas = readFile('shas').trim()
-                                              sh("echo "+shas)
+                                              sh("cat shas ")
                                  sh("oc -n sc-avo2 get is ${OCP_IS} -o yaml |egrep "+ sha1 )
 
                                  return true;
