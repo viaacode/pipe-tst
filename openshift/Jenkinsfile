@@ -38,13 +38,14 @@ pipeline {
                                 echo ("selected tag: "+userInput)
                                 def sha1 = userInput.split(' ')[0]
                                 echo ("selected sha1: "+ sha1)
+                                environment {  
+                              VERSION = sh(returnStdout: true, script: "echo mmmmm"+sha1).trim()
+                                 }
                                 
                               }    
                                 
         }
-                   environment {  
-                              VERSION = sh(returnStdout: true, script: "echo mmmmm"+sha1).trim()
-                                 }
+                   
         }
         
         stage('Approve') {
