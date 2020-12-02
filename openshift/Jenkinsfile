@@ -2,7 +2,6 @@
 @Library('jenkins-shared-libs') _
 
 
-
 pipeline {
     agent {
       node {
@@ -59,4 +58,5 @@ pipeline {
             cleanWs()
         }
     }
+}
 }
