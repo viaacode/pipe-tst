@@ -27,11 +27,7 @@ pipeline {
     }
             
     stages {
-           script {
-                      sh("oc -n sc-avo2 get is ${OCP_IS} > ocp_is")
-                      def ocpTags = readFile('ocp_is').trim()
-                      echo ("tags in opnenshift:")+ocpTags
-            }
+           
     
         stage('select commit from version') {
             
@@ -47,6 +43,11 @@ pipeline {
                                sh("git checkout "+ sha1) 
                                 
                               }    
+                              script {
+                      sh("oc -n sc-avo2 get is ${OCP_IS} > ocp_is")
+                      def ocpTags = readFile('ocp_is').trim()
+                      echo ("tags in opnenshift:")+ocpTags
+            }
                                 
         }
                    
