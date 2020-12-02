@@ -43,7 +43,7 @@ pipeline {
                                 
         }
                    environment {  
-                              VERSION = sh(returnStdout: true, script: echo (sha1)).trim()
+                              VERSION = ""+sha1
                                  }
         }
         
