@@ -58,6 +58,7 @@ pipeline {
                                  return true;
                                  } catch (error) {
                                             echo 'Tag not found in openshift'
+                                           sh("exit 1")
                                             return false;
                                  }
                                
