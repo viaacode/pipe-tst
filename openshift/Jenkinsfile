@@ -53,5 +53,5 @@ echo ("selected sha1: "+ sha1)
             cleanWs()
         }
     }
-}
+
 }
