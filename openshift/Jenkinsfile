@@ -43,7 +43,7 @@ pipeline {
                                 
         }
                    environment {  
-                              VERSION = userInput.split(' ')[0]
+                              VERSION = sh(returnStdout: true, script: "echo mmmmm"+sha1).trim()
                                  }
         }
         
