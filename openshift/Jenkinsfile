@@ -17,15 +17,16 @@ pipeline {
     stages {
 
         stage('what to do') {
-            steps {
-
-    sh('git show-ref --tags > tags')
+            sh('git show-ref --tags > tags')
     def tags = readFile('tags').trim()
     def userInput = input([ message: 'Please select git tag', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'Tag']]])
 
     echo ("selected tag: "+userInput)
     def sha1 = userInput.split(' ')[0]
     echo ("selected sha1: "+ sha1)
+            steps {
+echo moo
+
     
 
             }
