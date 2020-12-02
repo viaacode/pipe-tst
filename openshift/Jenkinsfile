@@ -44,10 +44,15 @@ pipeline {
                                 
                               }    
                               script {
-                      sh("oc -n sc-avo2 get is ${OCP_IS} > ocp_is")
-                      def ocpTags = readFile('ocp_is').trim()
-                      echo ("tags in opnenshift:")+ocpTags
-            }
+                                   
+                               sh(login_oc.sh $ENDPOINT oc project sc-avo2)
+                               sh(oc project sc-avo2)   
+                               sh("oc -n sc-avo2 get is ${OCP_IS} -o yaml |egrep "+ sha1)
+                               def ocpTags = readFile('ocp_is').trim()
+                               echo ("tags in opnenshift:")+ocpTags
+                                        
+
+                                 }
                                 
         }
                    
