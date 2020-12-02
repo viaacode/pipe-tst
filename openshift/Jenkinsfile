@@ -52,7 +52,7 @@ pipeline {
                               sh("oc -n sc-avo2 get is ${OCP_IS} -o yaml > shas ")
                               def shas = readFile('shas').trim()
                               sh("cat shas ")
-                              def userTag = userInput.split(' ')[1].split('/')[3]
+                              def userTag = userInput.split(' ')[1].split('/')[2]
                               echo ("selected userTag: "+ userTag)
                       
                                          
