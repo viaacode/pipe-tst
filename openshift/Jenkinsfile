@@ -14,10 +14,20 @@ pipeline {
    options {
         timeout(time: 45, unit: 'MINUTES')
     }
+ environment {
+        ENDPOINT = sh(returnStdout: true, script: 'echo https://c100-e.eu-de.containers.cloud.ibm.com:31240').trim()
+        VERSION = sh(returnStdout: true, script: "git describe --tags|| echo latest").trim()
+        shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+        BRANCH = sh(returnStdout: true, script: "git branch | grep '*' | cut -d ' ' -f2").trim()
+        REGISTRY = sh(returnStdout: true, script: 'echo docker-registry-default.meemoo-596946-2bc857e5f10eb63ab790a3a1d19a696c-0001.eu-de.containers.appdomain.cloud').trim()
+        OKD_REGISTRY = sh(returnStdout: true, script: 'echo docker-registry-default.apps.do-prd-okp-m0.do.viaa.be').trim()
+        OKD_ENDPOINT = sh(returnStdout: true, script: 'echo https://do-prd-okp-m0.do.viaa.be:8443').trim()
+        //sh(returnStdout: true, script: 'git describe --tags')
+    }
     stages {
 
     
-        stage('Build docker image') {
+        stage('select commit from version') {
             
                    steps { 
                               script {
@@ -28,30 +38,31 @@ pipeline {
 
                                     echo ("selected tag: "+userInput)
                                    def sha1 = userInput.split(' ')[0]
+                                        
                                     echo ("selected sha1: "+ sha1)
+                                    
                               }    
+                                       environment {  
+                                                  VERSION = sha1
             }
         }
         stage('Approve') {
             steps {
                 input message: "Do you want to approve the deploy in production?", id: "approval"
-                sh 'make -f ./openshift/Makefile approved'
+                sh '''/bin/bash
+                echo approved: $VERSION
+                git checkout $VERSION'''
             }
         }
         stage('Tag PRD') {
             steps {
-                sh 'make -f ./openshift/Makefile tag-prd'
+                sh 'echo moo $VERSION'
             }
         }
-        stage('Deploy PRD') {
-            steps {
-                sh 'make -f ./openshift/Makefile deploy-prd'
-            }
-        }
+        
     }
     post {
         always {
-            sh 'make -f ./openshift/Makefile post-clean'
             cleanWs()
         }
     }
