@@ -25,9 +25,11 @@ pipeline {
         OCP_IS= sh(returnStdout: true, script: 'echo avo2-proxy').trim()
         //sh(returnStdout: true, script: 'git describe --tags')
     }
-           sh("oc -n sc-avo2 get is ${OCP_IS} > ocp_is")
-           def ocpTags = readFile('ocp_is').trim()
-           echo ("tags in opnenshift:")+ocpTags
+            script {
+                      sh("oc -n sc-avo2 get is ${OCP_IS} > ocp_is")
+                      def ocpTags = readFile('ocp_is').trim()
+                      echo ("tags in opnenshift:")+ocpTags
+            }
     stages {
 
     
