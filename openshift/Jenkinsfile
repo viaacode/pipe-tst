@@ -43,8 +43,8 @@ pipeline {
                                 
         }
                    environment {  
-                                            VERSION = (sha1).trim()
-                                            }
+                              VERSION = sh(returnStdout: true, script: "git checkout "+ sha1).trim()
+                                 }
         }
         
         stage('Approve') {
