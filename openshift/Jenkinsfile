@@ -16,7 +16,7 @@ pipeline {
     }
  environment {
         ENDPOINT = sh(returnStdout: true, script: 'echo https://c100-e.eu-de.containers.cloud.ibm.com:31240').trim()
-        VERSION = sh(returnStdout: true, script: "git describe --tags|| echo latest").trim()
+        LATEST_VERSION = sh(returnStdout: true, script: "git describe --tags|| echo latest").trim()
         shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
         BRANCH = sh(returnStdout: true, script: "git branch | grep '*' | cut -d ' ' -f2").trim()
         REGISTRY = sh(returnStdout: true, script: 'echo docker-registry-default.meemoo-596946-2bc857e5f10eb63ab790a3a1d19a696c-0001.eu-de.containers.appdomain.cloud').trim()
