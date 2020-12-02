@@ -50,9 +50,17 @@ pipeline {
                               
                                ''')
                               
-                               sh("oc -n sc-avo2 get is ${OCP_IS} -o yaml |egrep "+ sha1)
-                               def ocpTags = readFile('ocp_is').trim()
-                               echo ("tags in opnenshift:")+ocpTags
+                      
+                                         
+                                try {
+                                 sh("oc -n sc-avo2 get is ${OCP_IS} -o yaml |egrep "+ sha1 )
+
+                                 return true;
+                                 } catch (error) {
+                                            echo 'Tag not found in openshift'
+                                            return false;
+                                 }
+                               
                                         
 
                                  }
