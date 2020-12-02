@@ -1,12 +1,6 @@
 /* import shared library */
 @Library('jenkins-shared-libs') _
-            sh('git show-ref --tags > tags')
-def tags = readFile('tags').trim()
-def userInput = input([ message: 'Please select git tag', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'Tag']]])
-
-echo ("selected tag: "+userInput)
-def sha1 = userInput.split(' ')[0]
-echo ("selected sha1: "+ sha1)
+           
 
 pipeline {
     agent {
@@ -22,17 +16,17 @@ pipeline {
     }
     stages {
 
-        stage('what to do') {
-
-            steps {
-        echo moo
-
     
-
-            }
         stage('Build docker image') {
-
+            
             steps {
+             sh('git show-ref --tags > tags')
+def tags = readFile('tags').trim()
+def userInput = input([ message: 'Please select git tag', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'Tag']]])
+
+echo ("selected tag: "+userInput)
+def sha1 = userInput.split(' ')[0]
+echo ("selected sha1: "+ sha1)
             echo moo    
             }
         }
