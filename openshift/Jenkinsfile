@@ -22,8 +22,12 @@ pipeline {
         REGISTRY = sh(returnStdout: true, script: 'echo docker-registry-default.meemoo-596946-2bc857e5f10eb63ab790a3a1d19a696c-0001.eu-de.containers.appdomain.cloud').trim()
         OKD_REGISTRY = sh(returnStdout: true, script: 'echo docker-registry-default.apps.do-prd-okp-m0.do.viaa.be').trim()
         OKD_ENDPOINT = sh(returnStdout: true, script: 'echo https://do-prd-okp-m0.do.viaa.be:8443').trim()
+        OCP_IS= sh(returnStdout: true, script: 'echo avo2-proxy').trim()
         //sh(returnStdout: true, script: 'git describe --tags')
     }
+           sh("oc -n sc-avo2 get is ${OCP_IS} > ocp_is")
+           def ocpTags = readFile('ocp_is').trim()
+           echo ("tags in opnenshift:")+ocpTags
     stages {
 
     
@@ -46,14 +50,7 @@ pipeline {
                    
         }
         
-        stage('Approve') {
-            steps {
-                input message: "Do you want to approve the deploy in production?", id: "approval"
-                sh '''/bin/bash
-                echo approved: $VERSION
-                git checkout $VERSION'''
-            }
-        }
+       
         stage('Tag PRD') {
             steps {
                 sh 'echo moo $VERSION'
