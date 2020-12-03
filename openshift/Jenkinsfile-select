@@ -73,10 +73,13 @@ pipeline {
                     echo 'Tag not found in openshift'
                     sh("exit 1")
                     return false; }
-                // do something below ed oc tag $image:$imagetag
+                // do something below eg oc tag $image:$imagetag
                 sh '''#!/bin/bash
                 set -e;
-                oc describe imagestreamtag $image:$imagetag
+                oc -n $ocp_project describe imagestreamtag $image:$imagetag &&
+                oc whoami &&
+                oc project
+                
                 '''
            
            }//enscript
