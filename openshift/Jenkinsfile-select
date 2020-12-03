@@ -42,7 +42,6 @@ pipeline {
                   sh("oc get is | cut -d ' ' -f 1| tail -n+2 > images")       
                   def images = readFile('images').trim()
                   def userInput = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: images, description: '', name: 'imagestream']]])
-                  echo ("selected tag: "+userInput)
                   def image = userInput
                   echo ("selected image: "+ image)
                   sh("echo IMAGE=$image >.env-tmp")
@@ -50,7 +49,6 @@ pipeline {
                   sh("oc get is -o yaml $image | egrep 'tag: '| sed 's/ //g' |cut -d ':' -f 2 > tags")       
                   def tags = readFile('tags').trim()
                   def userInput2 = input([ message: 'Please select image steam tag ', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'imagestreamtag']]])
-                  echo ("selected tag: "+userInput2)
                   def imagetag = userInput2
                   echo ("selected imagetag: "+ imagetag)
 
@@ -60,7 +58,7 @@ pipeline {
                                          
                                 try {
                                            
-                                 sh(returnStdout: true, script: "oc -n sc-avo2 get is ${OCP_IS} -o yaml |egrep 'tag: '| egrep "+ userTag )
+                                 sh(returnStdout: true, script: "echo tag this $image:$imagetag" )
 
                                  return true;
                                  } catch (error) {
