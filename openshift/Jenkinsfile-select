@@ -45,7 +45,7 @@ pipeline {
                   echo ("selected tag: "+userInput)
                   def image = userInput
                   echo ("selected image: "+ image)
-                  sh("echo IMAGE=$image >.env-tmp)
+                  sh("echo IMAGE=$image >.env-tmp")
                  
                   sh("oc get is -o yaml $image | egrep 'tag: '| sed 's/ //g' |cut -d ':' -f 2> tags")       
                   def tags = readFile('tags').trim()
