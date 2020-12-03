@@ -68,7 +68,7 @@ pipeline {
                 try {
                 sh(returnStdout: true, script: "echo selected imagestreamtag $image:$imagetag");
                 sh(returnStdout: true, script: "oc describe imagestreamtag $image:$imagetag");
-                // return true;
+                 return true;
                 } catch (error) {
                     echo 'Tag not found in openshift'
                     sh("exit 1")
