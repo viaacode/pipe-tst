@@ -29,7 +29,7 @@ pipeline {
     stages {
            
     
-        stage('select commit from version') {
+        stage('select server/project/imgae/tag') {
             
              steps { 
                 script {
@@ -38,14 +38,14 @@ pipeline {
                 echo $ENDPOINT >> endpoints
                 ''')       
                   def endpoints = readFile('endpoints').trim()
-                  def userInputI = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: endpoints, description: '', name: 'ocp_installation']]])
+                  def userInputI = input([ message: 'Please select OCP installation url', parameters: [[$class: 'ChoiceParameterDefinition', choices: endpoints, description: '', name: 'ocp_installation']]])
                   def endpoint = userInputI
                   echo ("selected OCP install at: "+ endpoint)
                 sh("login_oc.sh $endpoint > /dev/null 2>&1 ")
                 
                 sh("oc get projects| awk '{print \$1}'| tail -n+2 | egrep -v 'openshift|ibm|viaa|kube|default' > projects")
                 def projects = readFile('projects').trim()
-                def userInputP = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: projects, description: '', name: 'project']]])
+                def userInputP = input([ message: 'Please select project', parameters: [[$class: 'ChoiceParameterDefinition', choices: projects, description: '', name: 'project']]])
                 def ocp_project = userInputP
                 echo ("selected OCP project: "+ ocp_project)
                 sh("oc project $ocp_project")
@@ -54,14 +54,14 @@ pipeline {
                    
                   sh("oc get is | cut -d ' ' -f 1| tail -n+2 > images")       
                   def images = readFile('images').trim()
-                  def userInput = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: images, description: '', name: 'imagestream']]])
+                  def userInput = input([ message: 'Please select imagestream', parameters: [[$class: 'ChoiceParameterDefinition', choices: images, description: '', name: 'imagestream']]])
                   def image = userInput
                   echo ("selected image: "+ image)
                   sh("echo IMAGE=$image >.env-tmp")
                  
                   sh("oc get is -o yaml $image | egrep 'tag: '| sed 's/ //g' |cut -d ':' -f 2 > tags")       
                   def tags = readFile('tags').trim()
-                  def userInput2 = input([ message: 'Please select image steam tag ', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'imagestreamtag']]])
+                  def userInput2 = input([ message: 'Please select imagestreamtag ', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'imagestreamtag']]])
                   def imagetag = userInput2
                   echo ("selected imagetag: "+ imagetag)
 
