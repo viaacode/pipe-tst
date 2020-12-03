@@ -33,10 +33,21 @@ pipeline {
             
              steps { 
                 script {
+                
+                
                 sh('''#/bin/bash
                 echo $OKD_ENDPOINT > endpoints
                 echo $ENDPOINT >> endpoints
+                echo qas > app_env
+                echo prd >> app_env
+                echo dev >> app_env
                 ''')
+                //get env to work with
+                def app_envs = readFile('app_env').trim()
+                def userInputE = input([ message: 'Please select ENV (qas/prd/dev)', parameters: [[$class: 'ChoiceParameterDefinition', choices: envs, description: '', name: 'env']]])
+                def app_env = userInputE
+                echo ("selected ENV to tag : "+ app_env)
+                
                 //get endpoints
                 def endpoints = readFile('endpoints').trim()
                 def userInputI = input([ message: 'Please select OCP installation url', parameters: [[$class: 'ChoiceParameterDefinition', choices: endpoints, description: '', name: 'ocp_installation']]])
@@ -67,6 +78,7 @@ pipeline {
                 //final check                      
                 try {
                            sh ("oc get imagestreamtag $image:$imagetag -o json")
+                           sh ("echo oc tag $image:$imagetag $image:$app_env")
                          
                       
                            sh(returnStdout: true, script: "oc get imagestreamtag $image:$imagetag");
