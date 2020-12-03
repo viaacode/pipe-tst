@@ -67,11 +67,10 @@ pipeline {
                 //final check                      
                 try {
                            sh '''#!/bin/bash
-                           oc -n $ocp_project describe imagestreamtag $image:$imagetag &&
-                           oc whoami &&
-                           oc project
+                           oc get imagestreamtag $image:$imagetag -o json 
+                         
                            '''
-                           sh(returnStdout: true, script: "oc describe imagestreamtag $image:$imagetag");
+                           sh(returnStdout: true, script: "oc get imagestreamtag $image:$imagetag");
                             return true;
                            } catch (error) {
                                echo 'Tag not found in openshift'
