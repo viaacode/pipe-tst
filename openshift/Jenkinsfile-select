@@ -66,10 +66,9 @@ pipeline {
                 echo ("selected imagetag: "+ imagetag)
                 //final check                      
                 try {
-                           sh '''#!/bin/bash
-                           oc get imagestreamtag $image:$imagetag -o json 
+                           sh ("oc get imagestreamtag $image:$imagetag -o json")
                          
-                           '''
+                      
                            sh(returnStdout: true, script: "oc get imagestreamtag $image:$imagetag");
                             return true;
                            } catch (error) {
