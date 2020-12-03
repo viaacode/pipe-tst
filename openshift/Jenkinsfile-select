@@ -42,7 +42,7 @@ pipeline {
                   def endpoint = userInputI
                   echo ("selected OCP install at: "+ endpoint)
                 
-                sh("oc get projects| awk '{print $1}'| tail -n+2 | egrep -v 'openshift|ibm|viaa|kube|default' > prjocets")
+                sh("oc get projects| awk '{print \$1}'| tail -n+2 | egrep -v 'openshift|ibm|viaa|kube|default' > prjocets")
                 def projects = readFile('projects').trim()
                 def userInputP = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: projects, description: '', name: 'project']]])
                 def ocp_project = userInputP
