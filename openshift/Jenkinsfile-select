@@ -44,7 +44,7 @@ pipeline {
                 ''')
                 //get env to work with
                 def app_envs = readFile('app_env').trim()
-                def userInputE = input([ message: 'Please select ENV (qas/prd/dev)', parameters: [[$class: 'ChoiceParameterDefinition', choices: app_env, description: '', name: 'env']]])
+                def userInputE = input([ message: 'Please select ENV (qas/prd/dev)', parameters: [[$class: 'ChoiceParameterDefinition', choices: app_envs, description: '', name: 'env']]])
                 def app_env = userInputE
                 echo ("selected ENV to tag : "+ app_env)
                 
