@@ -41,7 +41,7 @@ pipeline {
                   def userInputI = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: endpoints, description: '', name: 'ocp_installation']]])
                   def endpoint = userInputI
                   echo ("selected OCP install at: "+ endpoint)
-                sh('''#/bin/bash
+                sh('''#!/bin/bash
                      set -e
                      login_oc.sh $endpoint > /dev/null 2>&1
                      
@@ -52,7 +52,7 @@ pipeline {
                 def userInputP = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: projects, description: '', name: 'project']]])
                 def ocp_project = userInputP
                 echo ("selected OCP project: "+ ocp_project)
-                sh('''#/bin/bash
+                sh('''#!/bin/bash
                   set -e
                   oc project $ocp_project                     
                    ''')
