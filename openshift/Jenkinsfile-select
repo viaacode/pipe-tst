@@ -66,16 +66,16 @@ pipeline {
                 echo ("selected imagetag: "+ imagetag)
                 //final check                      
                 try {
-                sh(returnStdout: true, script: "echo selected imagestreamtag $image:$imagetag")
-                sh(returnStdout: true, script: "oc describe imagestreamtag $image:$imagetag")
-                return true;
+                sh(returnStdout: true, script: "echo selected imagestreamtag $image:$imagetag");
+                sh(returnStdout: true, script: "oc describe imagestreamtag $image:$imagetag");
+                // return true;
                 } catch (error) {
                     echo 'Tag not found in openshift'
                     sh("exit 1")
                     return false; }
                 // do something below eg oc tag $image:$imagetag
                 sh '''#!/bin/bash
-                set -e;
+                set +e;
                 oc -n $ocp_project describe imagestreamtag $image:$imagetag &&
                 oc whoami &&
                 oc project
