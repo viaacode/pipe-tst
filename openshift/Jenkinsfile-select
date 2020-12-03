@@ -47,7 +47,7 @@ pipeline {
                   echo ("selected image: "+ image)
                   sh("echo IMAGE=$image >.env-tmp")
                  
-                  sh("oc get is -o yaml $image | egrep 'tag: '| sed 's/ //g' |cut -d ':' -f 2> tags")       
+                  sh("oc get is -o yaml $image | egrep 'tag: '| sed 's/ //g' |cut -d ':' -f 2 > tags")       
                   def tags = readFile('tags').trim()
                   def userInput2 = input([ message: 'Please select image steam tag ', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'imagestreamtag']]])
                   echo ("selected tag: "+userInput2)
