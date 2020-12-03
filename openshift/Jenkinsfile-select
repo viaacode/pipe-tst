@@ -33,12 +33,27 @@ pipeline {
             
              steps { 
                 script {
-                sh('''/bin/bash
+                sh('''#/bin/bash
+                echo $OKD_ENDPOINT > endpoints
+                echo $ENDPOINT >> endpoints
+                ''')       
+                  def endpoints = readFile('endpoints').trim()
+                  def userInputI = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: endpoints, description: '', name: 'ocp_installation']]])
+                  def endpoint = userInputI
+                  echo ("selected OCP install at: "+ endpoint
+                
+                sh("oc get projects| awk '{print $1}'| tail -n+2 | egrep -v 'openshift|ibm|viaa|kube|default' > prjocets")
+                def projects = readFile('projects').trim()
+                def userInputP = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: projects, description: '', name: 'project']]])
+                def ocp_project = userInputP
+                echo ("selected OCP project: "+ ocp_project
+                
+                sh('''#/bin/bash
                      set -e
-                     login_oc.sh $ENDPOINT > /dev/null 2>&1
-                     oc project sc-avo2
-
-                     ''')
+                     login_oc.sh $endpoint > /dev/null 2>&1
+                     oc project $project
+                   ''')
+                   
                   sh("oc get is | cut -d ' ' -f 1| tail -n+2 > images")       
                   def images = readFile('images').trim()
                   def userInput = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: images, description: '', name: 'imagestream']]])
@@ -56,20 +71,20 @@ pipeline {
                      
                  
                                          
-                                try {
-                                           
-                                 sh(returnStdout: true, script: "echo tag this $image:$imagetag" )
+          try {
 
-                                 return true;
-                                 } catch (error) {
-                                            echo 'Tag not found in openshift'
-                                           sh("exit 1")
-                                            return false;
-                                 }
-                               
-                                        
+           sh(returnStdout: true, script: "echo selected imagestreamtag $image:$imagetag")
+           sh(returnStdout: true, script: "oc describe imagestreamtag $image:$imagetag")
+           return true;
+           } catch (error) {
+             echo 'Tag not found in openshift'
+             sh("exit 1")
+             return false;
+           }
 
-                                 }
+
+
+           }
                                 
         }
                    
