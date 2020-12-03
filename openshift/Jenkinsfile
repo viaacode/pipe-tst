@@ -58,7 +58,7 @@ pipeline {
                                          
                                 try {
                                            
-                                 sh(returnStdout: true, script: "oc -n sc-avo2 get is ${OCP_IS} -o yaml |egrep "+ userTag )
+                                 sh(returnStdout: true, script: "oc -n sc-avo2 get is ${OCP_IS} -o yaml |egrep tag:\ "+ userTag )
 
                                  return true;
                                  } catch (error) {
