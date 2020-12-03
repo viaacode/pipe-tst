@@ -40,7 +40,7 @@ pipeline {
 
                      ''')
                   sh("oc get is | cut -d ' ' -f 1| tail -n+2 > images")       
-                  def tags = readFile('images').trim()
+                  def images = readFile('images').trim()
                   def userInput = input([ message: 'Please select image steam', parameters: [[$class: 'ChoiceParameterDefinition', choices: images, description: '', name: 'imagestream']]])
                   echo ("selected tag: "+userInput)
                   def image = userInput
