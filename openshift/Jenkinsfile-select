@@ -36,62 +36,59 @@ pipeline {
                 sh('''#/bin/bash
                 echo $OKD_ENDPOINT > endpoints
                 echo $ENDPOINT >> endpoints
-                ''')       
-                  def endpoints = readFile('endpoints').trim()
-                  def userInputI = input([ message: 'Please select OCP installation url', parameters: [[$class: 'ChoiceParameterDefinition', choices: endpoints, description: '', name: 'ocp_installation']]])
-                  def endpoint = userInputI
-                  echo ("selected OCP install at: "+ endpoint)
+                ''')
+                //get endpoints
+                def endpoints = readFile('endpoints').trim()
+                def userInputI = input([ message: 'Please select OCP installation url', parameters: [[$class: 'ChoiceParameterDefinition', choices: endpoints, description: '', name: 'ocp_installation']]])
+                def endpoint = userInputI
+                echo ("selected OCP install at: "+ endpoint)
+                // login_oc
                 sh("login_oc.sh $endpoint > /dev/null 2>&1 ")
-                
+                // select project
                 sh("oc get projects| awk '{print \$1}'| tail -n+2 | egrep -v 'openshift|ibm|viaa|kube|default' > projects")
                 def projects = readFile('projects').trim()
                 def userInputP = input([ message: 'Please select project', parameters: [[$class: 'ChoiceParameterDefinition', choices: projects, description: '', name: 'project']]])
                 def ocp_project = userInputP
                 echo ("selected OCP project: "+ ocp_project)
+                // set project
                 sh("oc project $ocp_project")
-                 
-                
-                   
-                  sh("oc get is | cut -d ' ' -f 1| tail -n+2 > images")       
-                  def images = readFile('images').trim()
-                  def userInput = input([ message: 'Please select imagestream', parameters: [[$class: 'ChoiceParameterDefinition', choices: images, description: '', name: 'imagestream']]])
-                  def image = userInput
-                  echo ("selected image: "+ image)
-                  sh("echo IMAGE=$image >.env-tmp")
-                 
-                  sh("oc get is -o yaml $image | egrep 'tag: '| sed 's/ //g' |cut -d ':' -f 2 > tags")       
-                  def tags = readFile('tags').trim()
-                  def userInput2 = input([ message: 'Please select imagestreamtag ', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'imagestreamtag']]])
-                  def imagetag = userInput2
-                  echo ("selected imagetag: "+ imagetag)
-
-
-                     
-                 
-                                         
-          try {
-
-           sh(returnStdout: true, script: "echo selected imagestreamtag $image:$imagetag")
-           sh(returnStdout: true, script: "oc describe imagestreamtag $image:$imagetag")
-           return true;
-           } catch (error) {
-             echo 'Tag not found in openshift'
-             sh("exit 1")
-             return false;
-           }
-
-
-
-           }
+                //get images
+                sh("oc get is | cut -d ' ' -f 1| tail -n+2 > images")       
+                def images = readFile('images').trim()
+                def userInput = input([ message: 'Please select imagestream', parameters: [[$class: 'ChoiceParameterDefinition', choices: images, description: '', name: 'imagestream']]])
+                def image = userInput
+                echo ("selected image: "+ image)
+                sh("echo IMAGE=$image >.env-tmp")
+                sh("oc get is -o yaml $image | egrep 'tag: '| sed 's/ //g' |cut -d ':' -f 2 > tags")       
+                def tags = readFile('tags').trim()
+                def userInput2 = input([ message: 'Please select imagestreamtag ', parameters: [[$class: 'ChoiceParameterDefinition', choices: tags, description: '', name: 'imagestreamtag']]])
+                def imagetag = userInput2
+                echo ("selected imagetag: "+ imagetag)
+                //final check                      
+                try {
+                sh(returnStdout: true, script: "echo selected imagestreamtag $image:$imagetag")
+                sh(returnStdout: true, script: "oc describe imagestreamtag $image:$imagetag")
+                return true;
+                } catch (error) {
+                    echo 'Tag not found in openshift'
+                    sh("exit 1")
+                    return false; }
+                // do something below ed oc tag $image:$imagetag
+                sh '''#!/bin/bash
+                set -e;
+                oc describe imagestreamtag $image:$imagetag
+                '''
+           
+           }//enscript
                                 
-        }
+          }//endstep
                    
-        }
+        }//endstage
         
        
-        stage('Tag PRD') {
+        stage('put something here') {
             steps {
-                sh 'echo moo $VERSION'
+                sh 'echo moo thanks'
             }
         }
         
